@@ -1,0 +1,42 @@
+name: Desktop UI QA
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ui:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+      - name: Run UI QA
+        run: npm run test:ui
+      - name: Upload screenshots and trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VPrint-UI-QA
+          path: |
+            app/test-results/
+            app/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
