@@ -10,8 +10,6 @@
     <RootNamespace>VPrint</RootNamespace>
     <Version>0.1.0</Version>
     <ApplicationIcon>Assets/vprint.ico</ApplicationIcon>
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
     <PublishTrimmed>false</PublishTrimmed>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
