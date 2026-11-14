@@ -60,12 +60,14 @@ function Dialog({ title, children, onClose }: {
   title: string; children: ReactNode; onClose: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
   useEffect(() => {
     const previouslyFocused = document.activeElement instanceof HTMLElement ?
       document.activeElement : null;
     ref.current?.focus();
     const key = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { event.preventDefault(); onClose(); }
+      if (event.key === 'Escape') { event.preventDefault(); closeRef.current(); }
       if (event.key !== 'Tab' || !ref.current) return;
       const elements = [...ref.current.querySelectorAll<HTMLElement>(
         'button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])')];
@@ -79,7 +81,7 @@ function Dialog({ title, children, onClose }: {
     };
     document.addEventListener('keydown', key);
     return () => { document.removeEventListener('keydown', key); previouslyFocused?.focus(); };
-  }, [onClose]);
+  }, []);
 
   const backdrop = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) onClose();
@@ -276,7 +278,7 @@ export default function App() {
 
   return <div className="app-shell">
     <aside className="sidebar">
-      <div className="brand"><div className="brand-icon"><Printer size={23} strokeWidth={1.9} /></div>
+      <div className="brand"><img src="/logo.svg" className="brand-logo" alt="VPrint printer logo" />
         <div><strong>VPrint</strong><small>PRINT WORKSPACE</small></div></div>
       <div className="nav-label">WORKSPACE</div>
       <button type="button" className={'nav-row all-row ' + (!activeQueue ? 'active' : '')}

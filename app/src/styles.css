@@ -30,6 +30,7 @@ h2{font-size:17px;letter-spacing:-.22px;font-weight:700}
 .brand{display:flex;align-items:center;gap:12px;padding:0 10px;margin-bottom:51px}
 .brand-icon{width:44px;height:44px;border-radius:12px;background:#337e62;
   color:#fff;display:grid;place-items:center}
+.brand-logo{width:44px;height:44px;border-radius:12px;flex-shrink:0}
 .brand strong{display:block;font-size:21px;letter-spacing:-.6px}
 .brand small{display:block;font-size:9px;color:#b5d2c2;letter-spacing:1.45px;
   font-weight:700;margin-top:2px}
