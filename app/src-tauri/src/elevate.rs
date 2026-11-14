@@ -21,6 +21,8 @@ pub fn admin_command_if_requested() -> Option<i32> {
         ("create", hex)
     } else if let Some(hex) = arg.strip_prefix("--vprint-admin-delete=") {
         ("delete", hex)
+    } else if arg == "--vprint-admin-history" {
+        return Some(if crate::events::enable_history().is_ok() { 0 } else { 1 });
     } else {
         return None;
     };
@@ -80,7 +82,11 @@ mod native {
         let exe = std::env::current_exe().map_err(|err| err.to_string())?;
         let exe = wide(&exe.to_string_lossy());
         let verb = wide("runas");
-        let params = wide(&format!("--vprint-admin-{}={}", operation, encode(value)));
+        let params = if operation == "history" {
+            wide("--vprint-admin-history")
+        } else {
+            wide(&format!("--vprint-admin-{}={}", operation, encode(value)))
+        };
         let mut info = ShellExecuteInfo {
             cbSize: std::mem::size_of::<ShellExecuteInfo>() as u32,
             fMask: 0x40, // SEE_MASK_NOCLOSEPROCESS
@@ -130,6 +136,13 @@ pub use native::run_elevated;
 #[cfg(not(windows))]
 pub fn run_elevated(_op: &str, _value: &str) -> Result<(), String> {
     Err("Windows-only".into())
+}
+
+pub fn enable_history() -> Result<(), String> {
+    match crate::events::enable_history() {
+        Err(error) if error == "ADMIN_REQUIRED" => run_elevated("history", ""),
+        other => other,
+    }
 }
 
 pub fn create(label: &str) -> Result<(), String> {

@@ -148,6 +148,7 @@ export default function App() {
   const [data, setData] = useState<Snapshot>(EMPTY);
   const [initialLoading, setInitialLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [enablingHistory, setEnablingHistory] = useState(false);
   const [busy, setBusy] = useState(false);
   const [activeQueue, setActiveQueue] = useState<string | null>(null);
   const [query, setQuery] = useState('');
@@ -231,6 +232,18 @@ export default function App() {
     overscan: 7,
   });
 
+  const enableHistory = async () => {
+    if (enablingHistory) return;
+    setEnablingHistory(true);
+    try {
+      await api.enableHistory();
+      setNotification({ type: 'success', message: 'Windows print history is enabled.' });
+      await refresh(true);
+    } catch (err) {
+      setNotification({ type: 'error', message: errorMessage(err) });
+    } finally { setEnablingHistory(false); }
+  };
+
   const create = async (name: string) => {
     if (busy) return;
     setBusy(true);
@@ -311,7 +324,9 @@ export default function App() {
         {data.historyWarning && <div className="warning" role="status">
           <AlertTriangle size={19}/><span><strong>Print history needs attention</strong><br/>
             {data.historyWarning}</span>
-          <button type="button" onClick={() => setHelpOpen(true)}>Learn how <ArrowRight size={14}/></button>
+          <button type="button" disabled={enablingHistory} onClick={() => void enableHistory()}>
+            {enablingHistory ? <LoaderCircle size={14} className="spin"/> : <Check size={14}/>}
+            {enablingHistory ? 'Enabling…' : 'Enable history'}</button>
         </div>}
 
         <section className="printers-section">

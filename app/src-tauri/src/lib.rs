@@ -43,6 +43,13 @@ async fn get_snapshot() -> Result<Snapshot, String> {
 }
 
 #[tauri::command]
+async fn enable_history() -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(elevate::enable_history)
+        .await
+        .map_err(|error| error.to_string())?
+}
+
+#[tauri::command]
 async fn add_printer(label: String) -> Result<(), String> {
     let label = printers::label(&label)?;
     tauri::async_runtime::spawn_blocking(move || elevate::create(&label))
@@ -65,7 +72,7 @@ pub fn admin_command_if_requested() -> Option<i32> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_snapshot, add_printer, delete_printer])
+        .invoke_handler(tauri::generate_handler![get_snapshot, enable_history, add_printer, delete_printer])
         .run(tauri::generate_context!())
         .expect("Failed to start VPrint desktop application");
 }

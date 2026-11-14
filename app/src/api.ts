@@ -3,6 +3,7 @@ import type { Snapshot } from './types';
 
 export const api = {
   getSnapshot: () => invoke<Snapshot>('get_snapshot'),
+  enableHistory: () => invoke<void>('enable_history'),
   createPrinter: (label: string) => invoke<void>('add_printer', { label }),
   deletePrinter: (name: string) => invoke<void>('delete_printer', { name }),
 };

@@ -65,6 +65,8 @@ mod native {
         fn EvtOpenChannelConfig(session: *mut c_void, channel: *const u16, flags: u32) -> *mut c_void;
         fn EvtGetChannelConfigProperty(config: *mut c_void, property: i32, flags: u32,
                         size: u32, buffer: *mut c_void, used: *mut u32) -> i32;
+        fn EvtSetChannelConfigProperty(config: *mut c_void, property: i32, flags: u32, value: *const c_void) -> i32;
+        fn EvtSaveChannelConfig(config: *mut c_void, flags: u32) -> i32;
         fn EvtClose(handle: *mut c_void) -> i32;
     }
 
@@ -89,6 +91,24 @@ mod native {
                 std::mem::size_of_val(&data) as u32, data.as_mut_ptr().cast(), &mut needed) };
         if ok == 0 { return Err(io::Error::last_os_error().to_string()); }
         Ok((data[0] as u32) != 0)
+    }
+
+    pub fn enable_history() -> Result<(), String> {
+        if is_history_enabled()? { return Ok(()); }
+        let channel = wide(CHANNEL);
+        let handle = EvtHandle(unsafe { EvtOpenChannelConfig(null_mut(), channel.as_ptr(), 0) });
+        if handle.0.is_null() { return Err(io::Error::last_os_error().to_string()); }
+        // EVT_VARIANT: union (8 bytes), Count=1 (4 bytes), Type=EvtVarTypeBoolean=13 (4 bytes).
+        let variant: [u64; 2] = [1, (13u64 << 32) | 1];
+        if unsafe { EvtSetChannelConfigProperty(handle.0, 0, 0, variant.as_ptr().cast()) } == 0 {
+            return Err(format!("Unable to configure PrintService history: {}", io::Error::last_os_error()));
+        }
+        if unsafe { EvtSaveChannelConfig(handle.0, 0) } == 0 {
+            let error = io::Error::last_os_error();
+            if error.raw_os_error() == Some(5) { return Err("ADMIN_REQUIRED".into()); }
+            return Err(format!("Unable to enable PrintService history: {error}"));
+        }
+        Ok(())
     }
 
     fn render(event: *mut c_void) -> Result<String, String> {
@@ -133,7 +153,10 @@ mod native {
 }
 
 #[cfg(windows)]
-pub use native::{is_history_enabled, read_recent};
+pub use native::{is_history_enabled, read_recent, enable_history};
+
+#[cfg(not(windows))]
+pub fn enable_history() -> Result<(), String> { Err("Windows-only".into()) }
 
 #[cfg(not(windows))]
 pub fn is_history_enabled() -> Result<bool, String> { Ok(false) }
