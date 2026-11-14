@@ -37,7 +37,7 @@
           <StackPanel Margin="12,1,0,0" VerticalAlignment="Center">
             <TextBlock Text="VPrint" Foreground="White" FontWeight="Bold" FontSize="20"/>
             <TextBlock Text="PRINT WORKSPACE" Foreground="{StaticResource SidebarMutedBrush}"
-                       FontSize="9" FontWeight="SemiBold" CharacterSpacing="1"/>
+                       FontSize="9" FontWeight="SemiBold"/>
           </StackPanel>
         </StackPanel>
 

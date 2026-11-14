@@ -33,7 +33,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public PrinterInfo? SelectedPrinter
     {
         get => _selectedPrinter;
-        set { if (!Set(ref _selectedPrinter, value)) return; RefreshFilter(); OnPropertyChanged(nameof(CurrentScope)); }
+        set { if (!Set(ref _selectedPrinter, value)) return; RefreshFilter(); OnPropertyChanged(nameof(CurrentScope)); OnPropertyChanged(nameof(HasSelectedPrinter)); }
     }
     public bool IsBusy
     {
@@ -55,6 +55,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         get => _statusMessage;
         set => Set(ref _statusMessage, value);
     }
+    public bool HasSelectedPrinter => SelectedPrinter is not null;
     public string CurrentScope => SelectedPrinter?.Label ?? "All print jobs";
     public int PrinterCount => Printers.Count;
     public int JobCount => Jobs.Count;
