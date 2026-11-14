@@ -12,7 +12,7 @@
 
 Microsoft Print to PDF prompts for an output filename; current VPrint captures metadata only. Silent document capture requires Microsoft Print Support App v4, including an MSIX manifest and Windows 11 24H2+ integration, not just a portable EXE.
 
-The old WPF code is retained as a temporary migration reference until the Rust installer passes its workflow and Windows manual QA.
+The old WPF/PowerShell implementation has been removed from the active repository; the previous releases remain available in Git history.
 
 Relevant documentation:
 - https://learn.microsoft.com/en-us/windows/win32/printdocs/addprinter
