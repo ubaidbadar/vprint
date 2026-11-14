@@ -1,0 +1,33 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build and test
+        shell: pwsh
+        run: ./scripts/build.ps1
+      - name: Upload Windows executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: VPrint-Windows-x64
+          path: artifacts/win-x64/VPrint.exe
+          if-no-files-found: error
+          retention-days: 30
