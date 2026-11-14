@@ -51,7 +51,7 @@ public sealed class PrinterManager
     {
         label = ValidateLabel(label);
         var name = Quote(PrinterPrefix + label);
-        var script = $"""
+        var script = $@"
             $ErrorActionPreference = 'Stop'
             if (-not (Get-PrinterDriver -Name '{DriverName}' -ErrorAction SilentlyContinue)) {{
                 throw 'Microsoft Print to PDF is unavailable. Enable it in Windows Optional Features first.'
@@ -60,7 +60,7 @@ public sealed class PrinterManager
                 throw 'A printer with this name already exists.'
             }}
             Add-Printer -Name {name} -DriverName '{DriverName}' -PortName 'PORTPROMPT:'
-            """;
+            ";
         await PowerShellRunner.RunAsync(script, elevated: true);
     }
 
@@ -71,12 +71,12 @@ public sealed class PrinterManager
             throw new InvalidOperationException("VPrint can remove only its own PDF queues.");
 
         var name = Quote(printer.Name);
-        var script = $"""
+        var script = $@"
             $ErrorActionPreference = 'Stop'
             $printer = Get-Printer -Name {name} -ErrorAction Stop
             if ($printer.DriverName -ne '{DriverName}') {{ throw 'Printer driver changed. Removal refused.' }}
             Remove-Printer -Name {name} -ErrorAction Stop
-            """;
+            ";
         await PowerShellRunner.RunAsync(script, elevated: true);
     }
 
