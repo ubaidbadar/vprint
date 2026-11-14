@@ -8,3 +8,8 @@ artifacts/
 *.sqlite3-shm
 *.sqlite3-wal
 TestResults/
+app/node_modules/
+app/dist/
+app/src-tauri/target/
+app/test-results/
+app/playwright-report/

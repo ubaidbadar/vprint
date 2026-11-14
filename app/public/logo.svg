@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="VPrint icon">
+  <rect width="128" height="128" rx="29" fill="#1b3028"/>
+  <rect x="37" y="24" width="54" height="40" rx="5" fill="#f3f6f1"/>
+  <rect x="24" y="48" width="80" height="50" rx="12" fill="#91d2a9"/>
+  <circle cx="87" cy="63" r="4" fill="#1b5543"/>
+  <rect x="37" y="79" width="54" height="34" rx="4" fill="#f3f6f1"/>
+  <path d="M48 91h32M48 100h24" stroke="#27765d" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="VPrint printer logo">
-  <rect width="128" height="128" rx="28" fill="#1B2424"/>
-  <rect x="38" y="25" width="52" height="37" rx="5" fill="#FFF6F0"/>
-  <rect x="25" y="48" width="78" height="50" rx="12" fill="#D8684A"/>
-  <circle cx="88" cy="63" r="4" fill="#FFE4D8"/>
-  <rect x="37" y="80" width="54" height="33" rx="4" fill="#FFF6F0"/>
-  <path d="M47 91h34M47 100h25" stroke="#A74E37" stroke-linecap="round" stroke-width="4"/>
-</svg>
